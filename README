@@ -1,0 +1,192 @@
+GENERACION DE NIVELES DE PLATAFORMAS - ALGORITMO EVOLUTIVO
+Inteligencia Artificial 2026-2 - Entrega 2
+Agustin Venegas Fellenberg - 202273104-4
+
+------------------------------------------------------------
+1. COMPILACION
+------------------------------------------------------------
+Requiere solo g++ con soporte de C++17 (Linux); el programa no usa librerias
+externas. Python 3 con matplotlib (y pandas para analizar.py) es OPCIONAL y
+solo se usa para graficar niveles y generar las tablas/figuras del informe.
+
+    make          compila y genera el ejecutable ./generador
+    make clean    elimina los archivos de compilacion
+    make run      compila, ejecuta las 6 instancias de la carpeta instancias/ con
+                  semilla 1 y grafica las soluciones (ver seccion 4)
+    make experimentos  corre todos los experimentos del informe y genera sus
+                  tablas y graficos (ver seccion 6; tarda ~15 min con 8 nucleos)
+    make graficar genera un PNG por cada solucion de salidas/ (requiere matplotlib)
+
+------------------------------------------------------------
+2. EJECUCION
+------------------------------------------------------------
+    ./generador <archivo_instancia> [semilla] [opciones]
+
+    archivo_instancia  ruta al archivo de la instancia (obligatorio)
+    semilla            entero (opcional). Con la misma semilla se obtiene el
+                       mismo resultado. Si se omite, se usa una aleatoria y se informa.
+
+Opciones (entre parentesis, el valor por defecto = configuracion final):
+    -s N    semilla (alternativa al segundo argumento)
+    -p N    tamano de la poblacion                       (50)
+    -g N    maximo de generaciones                       (1000)
+    -n N    generaciones sin mejora para terminar        (300)
+    -k N    tamano del torneo                            (3)
+    -c X    probabilidad de cruce                        (0.8)
+    -m X    probabilidad de mutacion de cada hijo        (0.5)
+    -e N    individuos de elite                          (2)
+    -t N    largo base del tramo, en columnas            (50)
+    -x N    maximo de mutaciones aplicadas a un hijo     (3)
+    -o DIR  carpeta donde se guarda la solucion          (salidas)
+    -l ARC  guarda la curva de convergencia en ARC (CSV)
+    -q      no guarda el archivo de solucion
+
+Ejemplos:
+    ./generador instancias/instancia1.txt 1
+    ./generador instancias/instancia5.txt 7 -t 15 -p 80
+
+La consola muestra el mejor nivel de la poblacion inicial, el mejor final,
+las generaciones y el tiempo, y una linea "RESULTADO,..." en formato CSV que
+usan los scripts de experimentos.
+
+------------------------------------------------------------
+3. FORMATO DE ENTRADA
+------------------------------------------------------------
+Un archivo de texto con una linea:
+
+    <plataformas> <enemigos> <obstaculos> <max|min>
+
+Ejemplo (instancia 1):
+    75 20 15 max
+
+"max" indica que se busca maximizar la linealidad y "min" minimizarla.
+Se pueden crear nuevas instancias con el mismo formato; nada esta fijo en el codigo.
+
+------------------------------------------------------------
+4. FORMATO DE SALIDA
+------------------------------------------------------------
+El programa imprime un resumen por consola y guarda el mejor nivel de la
+poblacion en salidas/<nombre_instancia>_semilla<S>_solucion.txt, donde S es
+la semilla usada (por ejemplo, salidas/instancia1_semilla1_solucion.txt).
+
+El archivo tiene:
+  - Lineas de encabezado que parten con '#': cantidades solicitadas y
+    obtenidas, f, completitud, linealidad, fitness y semilla.
+  - Una grilla de 16 filas x 150 columnas (las lineas de encabezado parten con
+    '# ' -numeral y espacio-; una fila de la grilla puede partir con '#' pero
+    nunca lleva espacios, asi que ambas se distinguen) (la primera fila es la mas alta):
+        .  vacio
+        #  plataforma
+        E  enemigo
+        O  obstaculo
+        S  inicio (jugador)
+        G  meta
+
+Graficos (requiere Python 3 y matplotlib):
+    make graficar      genera un .png por cada salidas/*_solucion.txt
+    python3 graficar.py salidas/instancia1_semilla1_solucion.txt   grafica un solo nivel
+
+"make run" ya llama a "make graficar" al terminar. Si matplotlib no esta
+instalado, los niveles igual se generan y solo se omite el grafico. Para
+instalarlo una vez (el Makefile usa .venv automaticamente si existe):
+    python3 -m venv .venv && .venv/bin/pip install matplotlib
+
+------------------------------------------------------------
+5. ESTRUCTURA DEL CODIGO
+------------------------------------------------------------
+src/nivel.h              constantes del problema y representacion (struct Nivel)
+src/instancia.h/.cpp     lectura y validacion de la instancia
+src/salto.h/.cpp         modelo de salto: parabola discretizada y destinos alcanzables
+src/evaluacion.h/.cpp    funcion de evaluacion: conteos, BFS de completitud y linealidad
+src/solucion_inicial.h/.cpp  generacion aleatoria de niveles (poblacion inicial)
+src/operadores.h/.cpp    cruce por tramo, mutaciones y reparacion
+src/ae.h/.cpp            algoritmo evolutivo (parametros, torneo, elitismo, termino)
+src/salida.h/.cpp        escritura de la solucion
+src/main.cpp             programa principal y opciones de linea de comandos
+graficar.py              grafico de un nivel a partir del archivo de salida
+experimentos/correr.sh   ejecuta los experimentos del informe (CSV en experimentos/)
+experimentos/analizar.py genera las tablas del informe desde los CSV
+informe/                 informe en LaTeX (fuentes, figuras y PDF); compilar con
+                         'make' dentro de informe/ (usa pdflatex y bibtex)
+instancias/              las 6 instancias del enunciado (una linea cada una)
+salidas/                 soluciones generadas (.txt) y sus graficos (.png)
+
+------------------------------------------------------------
+6. EXPERIMENTOS
+------------------------------------------------------------
+    bash experimentos/correr.sh       (requiere nproc, xargs)
+    PARALELO=14 bash experimentos/correr.sh  fija las ejecuciones en paralelo
+                                      (por defecto, nproc; el informe uso 14)
+    python3 experimentos/analizar.py  (requiere pandas y matplotlib)
+
+  Experimentos (CSV en experimentos/):
+    final.csv       configuracion final, 6 instancias x 30 semillas
+    tramo.csv       largo del tramo L en {2,5,15,30,50}, 10 semillas
+    mutacion.csv    probabilidad de mutacion en {0.2,0.5,0.8}, 10 semillas
+    aleatoria.csv   busqueda aleatoria con 48.050 niveles, 10 semillas
+    convergencia_instanciaN.csv   curva de convergencia, semilla 1
+    variedad.py     (sin CSV) mide la variedad de los niveles con 10 semillas por
+                    instancia: python3 experimentos/variedad.py
+  analizar.py escribe informe/tablas/{resultados,sensibilidad}.tex y
+  experimentos/convergencia.pdf, e imprime las cifras citadas
+  en el texto (tiempos, razones, prueba de Mann-Whitney).
+  Hardware usado en el informe: AMD Ryzen 7 5700U (8 nucleos), Linux.
+
+------------------------------------------------------------
+7. SUPUESTOS Y MODELO
+------------------------------------------------------------
+- Nivel de 150 x 16 celdas. Como maximo una plataforma por columna, y asi se
+  cuentan en la funcion objetivo.
+- Se usan las 16 filas: una plataforma puede estar en las filas 1 a 16. Como
+  una entidad ocupa la celda de arriba, solo va sobre plataformas de las filas
+  1 a 15 (igual que el inicio y la meta, marcados con S y G).
+- El inicio esta en la columna 0 y la meta en la columna 149. Ambas tienen
+  plataforma, cuentan como plataformas y no tienen enemigos ni obstaculos.
+- Zona libre al inicio: no hay enemigos ni obstaculos en las columnas 0 a 4
+  (constante ZONA_INICIO en src/nivel.h).
+- El borde superior del nivel no es solido: al saltar desde las filas altas el
+  personaje puede salir momentaneamente por arriba (como en Super Mario Bros.).
+- Salto (src/salto.cpp): la parabola del enunciado, Y(u) = 4u(6-u)/9 (altura 4
+  en u = 3, vuelve a la altura inicial en u = 6), discretizada por columnas en
+  tres arreglos indexados por la distancia d (1..9):
+      d:        1  2  3  4  5  6   7   8    9
+      ALCANCE:  4  4  4  3  3  1  -2  -5  -10   subida maxima para aterrizar a d
+      SOBRE:    2  3  4  3  2  0  -4  -8  -12   altura del arco en una columna intermedia
+      BAJO:     4  5  5  5  4  1  -2  -6  -11   base minima para pasar por debajo
+  Un salto de a a b es valido si b es pisable, la subida hasta su tope no
+  supera ALCANCE[d] y cada columna intermedia queda bajo el arco (tope <= SOBRE)
+  o sobre el (base >= BAJO). Al caer a una plataforma mas baja se llega mas
+  lejos (hasta 9 columnas).
+- Enemigos: se derrotan cayendoles encima, por lo que su plataforma se puede
+  usar. Tocarlos de lado sigue siendo un choque.
+- Obstaculos: no se pueden tocar; su plataforma no es pisable.
+- Linealidad (adaptada de Launchpad, Smith et al. 2011): distancia vertical
+  media de las plataformas a la recta de regresion. Menor valor = mas lineal.
+- Funcion de evaluacion (se minimiza):
+      fitness = 20*f + 100*(columnas no alcanzadas) + 5*U + V
+  con f = diferencia de plataformas + enemigos + obstaculos respecto de lo
+  pedido y U = plataformas inutiles (pisables pero inaccesibles desde el inicio,
+  o alcanzables pero sin camino a la meta). V mide la linealidad L (desviacion
+  media a la recta) y la variedad del nivel (constantes en src/evaluacion.h):
+      max:  V = max(L, 0.8)          (hasta 0.8 se considera igual de lineal)
+      min:  V = -L - 6*c - 3*r       c = fraccion de pares de plataformas
+                                     consecutivas con altura distinta,
+                                     r = fraccion de las 16 filas usadas
+  c y r evitan que al minimizar la linealidad todas las plataformas se junten
+  en las filas extremas (niveles casi planos en dos franjas, iguales entre
+  semillas), como pedia el foro sobre variedad.
+
+------------------------------------------------------------
+8. USO DE HERRAMIENTAS DE IA
+------------------------------------------------------------
+- Herramientas: Claude Opus 5.5, Claude Sonnet 5.5 y Claude Code (Anthropic) en
+  la Entrega 2; en la Entrega 1 se usaron ademas Claude y Google Gemini.
+- Entrega 1: mejorar el entendimiento de los papers, construir un borrador,
+  revisar los avances en base a la rubrica y mejorar la redaccion.
+- Estado de Avance: Claude Code se uso como apoyo al arranque de la programacion;
+  esa base se trabajo luego con ayuda de la IA para revisar y corregir errores.
+- Entrega 2: desarrollo del algoritmo evolutivo en paralelo con el estudiante,
+  ayuda para aplicar los comentarios del ayudante en el modelo de salto y otros
+  cambios, redaccion del borrador del informe, ayuda con los experimentos y,
+  finalmente, revision del proyecto segun las rubricas y mejora de la redaccion.
+  (Detalle en la declaracion del informe.)

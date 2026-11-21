@@ -1,0 +1,80 @@
+\begin{thebibliography}{10}
+
+\bibitem{Compton2006}
+Kate Compton and Michael Mateas.
+\newblock Procedural level design for platform games.
+\newblock In {\em Proceedings of the 2nd Artificial Intelligence and
+  Interactive Digital Entertainment Conference (AIIDE)}, pages 109--111. AAAI
+  Press, 2006.
+
+\bibitem{Dahlskog2013}
+Steve Dahlskog and Julian Togelius.
+\newblock Patterns as objectives for level generation.
+\newblock In {\em Proceedings of the Second Workshop on Design Patterns in
+  Games}. ACM, 2013.
+
+\bibitem{DePontes2022}
+Rafael~Guerra de~Pontes, Herman~Martins Gomes, and Igor Santa~Ritta Seabra.
+\newblock Particle swarm optimization for procedural content generation in an
+  endless platform game.
+\newblock {\em Entertainment Computing}, 43:100496, 2022.
+\newblock doi:10.1016/j.entcom.2022.100496.
+
+\bibitem{Eiben2015}
+A.~E. Eiben and J.~E. Smith.
+\newblock {\em Introduction to Evolutionary Computing}.
+\newblock Natural Computing Series. Springer, Berlin, Heidelberg, second
+  edition, 2015.
+
+\bibitem{Green2020}
+Michael~Cerny Green, Luvneesh Mugrai, Ahmed Khalifa, and Julian Togelius.
+\newblock Mario level generation from mechanics using scene stitching.
+\newblock In {\em 2020 IEEE Conference on Games (CoG)}, pages 49--56, Osaka,
+  Japan, 2020. IEEE.
+
+\bibitem{Saavedra2026}
+Carlos Saavedra.
+\newblock Problema de generaci{\'o}n de niveles de plataformas.
+\newblock Presentaci{\'o}n del proyecto e instancias, Inteligencia Artificial,
+  Departamento de Inform{\'a}tica, Universidad T{\'e}cnica Federico Santa
+  Mar{\'i}a. Material del curso, disponible en Aula USM [{\'u}ltimo acceso: 18
+  de noviembre de 2026], 2026.
+
+\bibitem{Shaker2016}
+Noor Shaker, Julian Togelius, and Mark~J. Nelson.
+\newblock {\em Procedural Content Generation in Games}.
+\newblock Computational Synthesis and Creative Systems. Springer, Cham, 2016.
+
+\bibitem{Smith2010}
+Gillian Smith and Jim Whitehead.
+\newblock Analyzing the expressive range of a level generator.
+\newblock In {\em Proceedings of the 2010 Workshop on Procedural Content
+  Generation in Games (PCGames)}. ACM, 2010.
+
+\bibitem{Smith2011}
+Gillian Smith, Jim Whitehead, Michael Mateas, Mike Treanor, Jameka March, and
+  Mee Cha.
+\newblock Launchpad: A rhythm-based level generator for 2-{D} platformers.
+\newblock {\em IEEE Transactions on Computational Intelligence and AI in
+  Games}, 3(1):1--16, 2011.
+
+\bibitem{Summerville2016}
+Adam Summerville and Michael Mateas.
+\newblock Super {Mario} as a string: Platformer level generation via {LSTMs}.
+\newblock In {\em Proceedings of the 1st International Joint Conference of
+  DiGRA and FDG}, volume~13, pages 1--16, 2016.
+
+\bibitem{Summerville2018}
+Adam Summerville, Sam Snodgrass, Matthew Guzdial, Christoffer Holmg{\aa}rd,
+  Amy~K. Hoover, Aaron Isaksen, Andy Nealen, and Julian Togelius.
+\newblock Procedural content generation via machine learning ({PCGML}).
+\newblock {\em IEEE Transactions on Games}, 10(3):257--270, 2018.
+
+\bibitem{Togelius2011}
+Julian Togelius, Georgios~N. Yannakakis, Kenneth~O. Stanley, and Cameron
+  Browne.
+\newblock Search-based procedural content generation: A taxonomy and survey.
+\newblock {\em IEEE Transactions on Computational Intelligence and AI in
+  Games}, 3(3):172--186, 2011.
+
+\end{thebibliography}
